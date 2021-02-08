@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="styles.css" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>과즙상 테스트</title>
+        <link rel="icon" href="img/peach.png" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+            crossorigin="anonymous"
+        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&family=Jua&display=swap"
+            rel="stylesheet"
+        />
+        <script
+            type="text/javascript"
+            src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6020c204966c4c2b"
+        ></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light nav-distance">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Fruity Pang X 2</a>
+                <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+                >
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="https://animalface.site/ko/index.html"
+                                >동물상테스트(by 조코딩 유튜브 채널)바로가기</a
+                            >
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <section class="section">
+            <h1 class="title">내 과즙 팡팡 상은? <br /></h1>
+            <br />
+            <h5 class="subtitle">인공지능이 알려주는 내 과즙상 🔍</h5>
+            <h3>
+                <span class="pang">🍒</span>
+                <span class="pang">🍎</span>
+                <span class="pang">🍊</span>
+                <span class="pang">🍑</span>
+                <span class="pang">🍍</span>
+                <span class="pang">🍏</span>
+                <span class="pang">🥝</span>
+                <span class="pang">🍇</span>
+            </h3>
+        </section>
+        <!-- <sction class="youtube">
+            <div class="container mt-5 d-flex flex-row-reverse">
+                <img src="img/youtube-copy.jpg" alt="" class="youtube-icon" />
+                <a href="" class="youtube-link">By 조코딩 유튜브 채널</a>
+            </div>
+        </sction> -->
+        <script
+            class="jsbin"
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"
+        ></script>
+        <div id="webcam-container"></div>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+            crossorigin="anonymous"
+        ></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+        <script src="mode.js"></script>
+        <script type="text/javascript">
+            const URL = 'https://teachablemachine.withgoogle.com/models/mbtaOKPkL/';
+
+            let model, webcam, labelContainer, maxPredictions;
+
+            async function init() {
+                const modelURL = URL + 'model.json';
+                const metadataURL = URL + 'metadata.json';
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+
+                labelContainer = document.getElementById('label-container');
+                for (let i = 0; i < 3; i++) {
+                    const bar_chart = document.createElement('div');
+                    bar_chart.className = 'bar-chart';
+                    const bar_char_text = document.createElement('div');
+                    bar_char_text.className = 'bar-chart--text';
+                    const bar_char_innerContainer = document.createElement('div');
+                    bar_char_innerContainer.className = 'bar-char--innerContainer';
+                    const bar_char_percentage = document.createElement('div');
+                    bar_char_percentage.className = 'bar-char--percentage';
+
+                    bar_chart.appendChild(bar_char_text);
+                    bar_chart.appendChild(bar_char_innerContainer);
+                    bar_char_innerContainer.appendChild(bar_char_percentage);
+                    labelContainer.append(bar_chart);
+                }
+            }
+
+            async function predict() {
+                var image = document.getElementById('face-image');
+                const prediction = await model.predict(image, false);
+                console.log(prediction);
+                prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
+                console.log(prediction[0].className); // 가장 닮은 과일상.
+                var resultmessage;
+                var similiarCeleb;
+                switch (prediction[0].className) {
+                    case '매실상':
+                        resultmessage =
+                            '은은한 초록빛을 한가득 머금은 매실을 닮은 상. 보고만 있어도 기분이 좋아지는 매력을 가진 당신! 🍈🍈';
+                        similiarCeleb = '매실상 연예인: 가수 청하, 오마이걸 효정, 배우 김고은';
+                        break;
+                    case '복숭아상':
+                        resultmessage =
+                            '핑크빛이 은은하게 물들어있는 복숭아를 닮은 당신, 하얀 피부와 붉은 볼을 가진 뽀송뽀송함과 순수함의 결정체! 🍑🍑';
+                        similiarCeleb = '복숭아상 연예인: 정채연, 에이프릴 이나은, 이달소 츄';
+                        break;
+                    case '석류상':
+                        resultmessage =
+                            '영롱한 붉은 빛을 가득 머금은 당신! 보고만 있어도 빠져들듯한 눈빛의 소유자로, 새초롬하면서 무한한 매력이 가득한 사람! ';
+                        similiarCeleb = '석류상 연예인: 아이린, 설현, 유라, 경리';
+                        break;
+                    case '살구상':
+                        resultmessage =
+                            '멀리 있어도 풍기는 은은하고 진한 향을 머금은 살구상! 풋풋함과 성숙함 그 사이 어디쯤. 두 가지 매력의 소유자~ 🥭🥭';
+                        similiarCeleb = '살구상 연예인: 배우 김유정, 신세경, 박민영';
+                        break;
+                    case '파인애플상':
+                        resultmessage =
+                            '겉은 딱딱하지만 속은 부드러운 파인애플을 닮은 당신! 겉모습은 까칠해 보여도 속은 여린 반전 매력의 소유자! 🍍🍍';
+                        similiarCeleb = '파인애플상 연예인: 배우 서현진, 배우 김민희, 배우 류혜영';
+                        break;
+                    case '체리상':
+                        resultmessage =
+                            '앙증맞은 크기로, 한입에 먹을 수 있는 체리를 닮은 사람. 동글동글 보기만 해도 기분이 좋아지는 발랄한 매력의 소유자. 🍒🍒';
+                        similiarCeleb = '체리상 연예인: 아이유, 트와이스 나연';
+                        break;
+                    case '풋사과상':
+                        resultmessage =
+                            '한입 베어 물면 아삭아삭 팡팡 터지는 과즙처럼 넘치는 매력의 소유자! 풋풋함과 상큼함이 매력적인 당신 🍏🍏';
+                        similiarCeleb = '풋사과상 연예인: 조이, 류수정, 아이오아이 히토미 ';
+                        break;
+                    case '골드키위상':
+                        resultmessage =
+                            '그냥 키위상이라기엔 귀티가 좔좔 흐르는 당신. 멀리서도 빛나는 존재감의 소유자! 🥝🥝';
+                        similiarCeleb =
+                            '골드키위상 연예인: 황민현, 윤두준, 최시원, 임시완, 육성재, 차은우';
+                        break;
+                    case '감귤오렌지상':
+                        resultmessage =
+                            '과즙을 가득 머금은 상큼한 오렌지가 생각나는 당신! 오렌지를 가득 머금은 통통 튀는 매력의 소유자 🍊🍊';
+                        similiarCeleb =
+                            '감귤오렌지상 연예인: 구구단 미나, 박경, 세븐틴 승관, 강다니엘';
+                        break;
+                    case '두리안상':
+                        resultmessage =
+                            '열대과일의 왕 두리안, 한번 보면 잊을 수 없는 매력의 당신! 범접할 수 없는 다양한 매력의 소유자! 👑👑 ';
+                        similiarCeleb = '두리안상 연예인: 김종국, 김우빈, 이승윤, 양치승';
+                        break;
+                    case '포도상':
+                        resultmessage =
+                            '동글동글 알들이 옹기종기 매달려있는 포도를 닮은 당신! 어디로 튈지 모르는 사차원적인 매력의 소유자 🍇🍇';
+                        similiarCeleb = '포도상 연예인: 피오, 민윤기, 박서준';
+                        break;
+                    default:
+                        resultmessage = '알 수 없음';
+                }
+                $('.result-message').html(resultmessage);
+                $('.result-similar').html(similiarCeleb);
+
+                for (let i = 0; i < 3; i++) {
+                    const classPrediction = prediction[i].className;
+                    const probability = prediction[i].probability.toFixed(2) * 100 + '%';
+                    console.log(classPrediction, probability);
+                    labelContainer.childNodes[i].firstChild.innerHTML = classPrediction;
+                    labelContainer.childNodes[i].dataset.percentage = probability;
+                    labelContainer.childNodes[i].lastChild.innerText = probability;
+
+                    var backcolor;
+                    switch (classPrediction) {
+                        case '매실상':
+                            backcolor = 'rgb(214, 226, 126)';
+                            break;
+                        case '복숭아상':
+                            backcolor = 'rgb(255, 181, 162)';
+                            break;
+                        case '체리상':
+                            backcolor = 'rgb(197, 42, 66)';
+                            break;
+                        case '파인애플상':
+                            backcolor = 'rgb(243, 184, 46)';
+                            break;
+                        case '풋사과상':
+                            backcolor = 'rgb(100, 211, 27)';
+                            break;
+                        case '살구상':
+                            backcolor = 'rgb(241, 177, 143)';
+                            break;
+                        case '석류상':
+                            backcolor = 'rgb(219, 65, 45)';
+                            break;
+                        case '감귤오렌지상':
+                            backcolor = 'rgb(237, 127, 6)';
+                            break;
+                        case '골드키위상':
+                            backcolor = 'rgb(243, 195, 69)';
+                            break;
+                        case '포도상':
+                            backcolor = 'rgb(107, 79, 116)';
+                            break;
+                        case '두리안상':
+                            backcolor = 'rgb(170, 123, 60)';
+                            break;
+                        default:
+                        // code block
+                    }
+                    labelContainer.childNodes[i].lastChild.style.backgroundColor = backcolor;
+                    const percentWidth =
+                        prediction[i].probability.toFixed(2)*100 > 70 ? '80%' : probability;
+                    labelContainer.childNodes[i].lastChild.style.width = percentWidth;
+                    $('.loadmessage').hide();
+                }
+            }
+        </script>
+        <div class="file-upload">
+            <div class="image-upload-wrap">
+                <input
+                    class="file-upload-input"
+                    type="file"
+                    onchange="readURL(this);"
+                    accept="image/*"
+                />
+                <div class="drag-text">
+                    <img class="upload-image" src="img/upload.svg" />
+                    <h3 class="upload-span">
+                        얼굴 사진을 올려놓거나<br /><br />
+                        눌러서 업로드하세요!
+                    </h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" id="face-image" src="#" alt="your image" />
+                <div class="loadmessage">AI가 당신의 과즙상을 분석 중</div>
+                <p class="result-message"></p>
+                <span class="result-similar"></span>
+                <div id="label-container"></div>
+                <div class="image-title-wrap">
+                    <button type="button" onclick="removeUpload()" class="remove-image mt-5">
+                        다른 사진으로도 해보기
+                    </button>
+                </div>
+            </div>
+            <div class="addthis_inline_share_toolbox"></div>
+        </div>
+        <div id="disqus_thread"></div>
+        <script>
+            (function () {
+                // DON'T EDIT BELOW THIS LINE
+                var d = document,
+                    s = d.createElement('script');
+                s.src = 'https://pruitypangpang.disqus.com/embed.js';
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+        <noscript
+            >Please enable JavaScript to view the
+            <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript
+        >
+    </body>
+</html>
+<!-- Copyright (c) 2021 by Srinivas_N (https://codepen.io/Srinivas_N/pen/QzOgPG)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. -->
