@@ -18,9 +18,12 @@ function readURL(input) {
 }
 
 function removeUpload() {
+    $('.file-upload-content').replaceWith($('.file-upload-content').clone())
     $('.file-upload-input').replaceWith($('.file-upload-input').clone());
     $('.file-upload-content').hide();
     $('.image-upload-wrap').show();
+    location.reload();
+    
 }
 $('.image-upload-wrap').bind('dragover', function () {
     $('.image-upload-wrap').addClass('image-dropping');
